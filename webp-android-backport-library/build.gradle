@@ -35,7 +35,44 @@ android {
 
 }
 
+
+task packageNativeLibsJar(type: Zip, description: 'Create a jar with native libraries.') {
+    destinationDir file("$buildDir/libs")
+    baseName 'native-libs'
+    extension 'jar'
+    into('lib/') {
+        from fileTree(dir: 'libs', include: '**/*.so')
+    }
+}
+
+// Try to put *.so to aar but failed...
+//task addNativeLibsJarToAar(type: Zip, description: 'Add the native libs jar to aar.') {
+//    copy {
+//        from "${buildDir}/libs/${baseName}.aar"
+//        into "${buildDir}/libs"
+//        rename { String fileName ->
+//            fileName.replace('aar', 'orig')
+//        }
+//    }
+//
+//    destinationDir file("$buildDir/libs")
+//    extension 'aar'
+//    from zipTree("${buildDir}/libs/${baseName}.orig")
+//    into('libs') {
+//        from files("${buildDir}/libs/native-libs.jar")
+//    }
+//}
+//
+//addNativeLibsJarToAar.dependsOn packageNativeLibsJar
+
+tasks.whenTaskAdded { task ->
+    if (task.name == 'bundleRelease') {
+        task.finalizedBy packageNativeLibsJar
+    }
+}
+//tasks.withType(Zip) {
+//    packageLibrary -> packageLibrary.dependsOn packageNativeLibsJar
+//}
+
 dependencies {
-    compile 'com.android.support:appcompat-v7:+'
-    compile 'com.squareup:otto:+'
 }
