@@ -35,6 +35,21 @@ android {
 
 }
 
+task ndkBuild(type: Exec) {
+    if (System.properties['os.name'].toLowerCase().contains('windows')) {
+        commandLine 'cmd', '/c', 'ndk-build'
+    } else {
+        commandLine 'ndk-build'
+    }
+}
+
+task ndkClean(type: Exec) {
+    if (System.properties['os.name'].toLowerCase().contains('windows')) {
+        commandLine 'cmd', '/c', 'ndk-build clean'
+    } else {
+        commandLine 'ndk-build'
+    }
+}
 
 task packageNativeLibsJar(type: Zip, description: 'Create a jar with native libraries.') {
     destinationDir file("$buildDir/libs")
@@ -42,6 +57,15 @@ task packageNativeLibsJar(type: Zip, description: 'Create a jar with native libr
     extension 'jar'
     into('lib/') {
         from fileTree(dir: 'libs', include: '**/*.so')
+    }
+}
+packageNativeLibsJar.dependsOn ndkBuild
+
+clean.dependsOn ndkClean
+
+tasks.whenTaskAdded { task ->
+    if (task.name == 'bundleRelease') {
+        task.finalizedBy packageNativeLibsJar
     }
 }
 
@@ -65,14 +89,6 @@ task packageNativeLibsJar(type: Zip, description: 'Create a jar with native libr
 //
 //addNativeLibsJarToAar.dependsOn packageNativeLibsJar
 
-tasks.whenTaskAdded { task ->
-    if (task.name == 'bundleRelease') {
-        task.finalizedBy packageNativeLibsJar
-    }
-}
 //tasks.withType(Zip) {
 //    packageLibrary -> packageLibrary.dependsOn packageNativeLibsJar
 //}
-
-dependencies {
-}
