@@ -57,7 +57,8 @@ jclass_Bitmap::jclass_Config::jclass_Config(JNIEnv* jniEnv)
 	assert(jclassRef == 0);
 
 	ARGB_8888 = jniEnv->GetStaticFieldID(jclassRef,
-		"ARGB_8888",
+//		"ARGB_8888",
+		"RGB_565",
 		"Landroid/graphics/Bitmap$Config;");
 	assert(ARGB_8888);
 }

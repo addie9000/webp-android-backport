@@ -91,7 +91,8 @@ JNIEXPORT jobject JNICALL Java_android_backport_webp_WebPFactory_nativeDecodeByt
 	}
 
 	// Decode to ARGB
-	if(!WebPDecodeRGBAInto((uint8_t*)inputBuffer, inputBufferLen, (uint8_t*)bitmapPixels, bitmapInfo.height * bitmapInfo.stride, bitmapInfo.stride))
+//	if(!WebPDecodeRGBAInto((uint8_t*)inputBuffer, inputBufferLen, (uint8_t*)bitmapPixels, bitmapInfo.height * bitmapInfo.stride, bitmapInfo.stride))
+	if(!WebPDecodeRGB565Into((uint8_t*)inputBuffer, inputBufferLen, (uint8_t*)bitmapPixels, bitmapInfo.height * bitmapInfo.stride, bitmapInfo.stride))
 	{
 		AndroidBitmap_unlockPixels(jniEnv, outputBitmap);
 		jniEnv->ReleaseByteArrayElements(byteArray, inputBuffer, JNI_ABORT);
