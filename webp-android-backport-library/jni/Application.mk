@@ -1,3 +1,4 @@
+APP_PLATFORM := android-8
 APP_ABI := all
 APP_CPPFLAGS := -fno-rtti -fno-exceptions
 
